@@ -7,11 +7,16 @@ const app = express();
 const PORT = 3000;
 
 /****ROUTES****/
+const _route = require('./src/routes/menRoute')
+
+app.use('/men',_route);
+
+
+
+  
 app.get('/', (req,res)=>{
-
-   res.send(`Node and Nodemon from port ${PORT}`);
-})
-
+    res.send(`App Base Url`);
+ })
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
