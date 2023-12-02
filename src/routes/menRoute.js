@@ -20,13 +20,15 @@ router.use((req, res, next) => {
   })
 
   // Define a route with a dynamic parameter
-app.get('/:id', (req, res) => {
+  //man/4
+router.get('/:id', (req, res) => {
     const userId = req.params.id;
     res.send(`Hello, user ${userId}!`);
 });
 
 // Define a route that handles POST requests
-app.post('/new', (req, res) => {
+//men/new
+router.post('/new', (req, res) => {
     res.send('This is a POST request example!');
 });
 
