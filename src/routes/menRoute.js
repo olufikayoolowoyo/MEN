@@ -1,8 +1,15 @@
 import users from "../data/users";
 const uuid = require("uuid");
+const token = require('jsonwebtoken');
+const mongoose = require("mongoose");
+
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://127.0.0.1/MenDb')
 
 //Handles post requests
 var bodyParser = require("body-parser");
+
+
 
 const routes = (app) => {
   // parse application/x-www-form-urlencoded
