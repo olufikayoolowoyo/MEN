@@ -1,35 +1,62 @@
-const express = require('express');
-const router = express.Router();
+import users from "../data/users";
+const uuid = require("uuid");
 
-// middleware that is specific to this router
-router.use((req, res, next) => {
-    console.log('Time: ', Date.now())
-    next()
-  })
+//Handles post requests
+var bodyParser = require("body-parser");
 
+const routes = (app) => {
+  // parse application/x-www-form-urlencoded
+  app.use(bodyParser.urlencoded({ extended: false }));
 
- 
-  // men
-  router.get('/', (req, res) => {
-    res.send('MEN home page')
-  })
+  // parse application/json
+  app.use(bodyParser.json());
 
-  // men/about
-  router.get('/about', (req, res) => {
-    res.send('About MEN')
-  })
+  /****ROUTES****/
+  app
+    .route("/user")
+    .get((req, res) => {
+      res.send(users);
+    })
+    .post((req, res) => {
+      // // Validate if required form entries are sent
+      if (!req.body.name || !req.body.age || parseInt(req.body.age) == 0) {
+        res.sendStatus(400);
+      }
 
-  // Define a route with a dynamic parameter
-  //man/4
-router.get('/:id', (req, res) => {
-    const userId = req.params.id;
-    res.send(`Hello, user ${userId}!`);
-});
+      const newUser = {
+        id: uuid.v4(),
+        name: req.body.name,
+        age: parseInt(req.body.age),
+      };
 
-// Define a route that handles POST requests
-//men/new
-router.post('/new', (req, res) => {
-    res.send('This is a POST request example!');
-});
+      users.push(newUser);
+      res.json(users);
+    });
 
-  module.exports = router
+  app
+    .route("/user/:id")
+    .get((req, res) => {
+      const id = req.params.id;
+      let _user = users.filter((user) => user.id === parseInt(id));
+
+      if (_user.length > 0) {
+        res.json(_user);
+      } else {
+        res.sendStatus(400);
+      }
+    })
+    .delete((req, res) => {
+      const id = req.params.id;
+      let _user = users.filter((user) => user.id === parseInt(id));
+
+      if (_user.length > 0) {
+        users = users.filter((user) => user.id != parseInt(id));
+        res.json({ msg: "User deleted", users });
+      } else {
+        res.sendStatus(400);
+      }
+    });
+};
+
+export default routes;
+

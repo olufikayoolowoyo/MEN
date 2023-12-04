@@ -6,17 +6,8 @@ const express = require('express');
 const app = express();  
 const PORT = 3000;
 
-/****ROUTES****/
-const _route = require('./src/routes/menRoute')
-
-app.use('/men',_route);
-
-
-
-  
-app.get('/', (req,res)=>{
-    res.send(`App Base Url`);
- })
+import routes  from './src/routes/menRoute';
+routes(app);
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
