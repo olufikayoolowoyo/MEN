@@ -3,6 +3,8 @@ const uuid = require("uuid");
 const token = require('jsonwebtoken');
 const mongoose = require("mongoose");
 
+import { addUser,getUsers,findUserById ,removeUser,updateUser} from "../controllers/menController";
+
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://127.0.0.1/MenDb')
 
@@ -21,28 +23,19 @@ const routes = (app) => {
   /****ROUTES****/
   app
     .route("/user")
-    .get((req, res) => {
-      res.send(users);
-    })
-    .post((req, res) => {
-      // // Validate if required form entries are sent
-      if (!req.body.name || !req.body.age || parseInt(req.body.age) == 0) {
-        res.sendStatus(400);
-      }
-
-      const newUser = {
-        id: uuid.v4(),
-        name: req.body.name,
-        age: parseInt(req.body.age),
-      };
-
-      users.push(newUser);
-      res.json(users);
-    });
+    .get(getUsers)
+    .post(addUser);
 
   app
     .route("/user/:id")
-    .get((req, res) => {
+    .get(findUserById)
+    .put(updateUser)
+    .delete(removeUser);
+};
+
+export default routes;
+
+/*(req, res) => {
       const id = req.params.id;
       let _user = users.filter((user) => user.id === parseInt(id));
 
@@ -51,8 +44,8 @@ const routes = (app) => {
       } else {
         res.sendStatus(400);
       }
-    })
-    .delete((req, res) => {
+    }
+    (req, res) => {
       const id = req.params.id;
       let _user = users.filter((user) => user.id === parseInt(id));
 
@@ -62,8 +55,6 @@ const routes = (app) => {
       } else {
         res.sendStatus(400);
       }
-    });
-};
-
-export default routes;
-
+    }
+    
+    */
