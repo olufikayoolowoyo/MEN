@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
 import { UserSchema } from "../models/menModel";
 
 const User = mongoose.model("User", UserSchema);
@@ -62,3 +63,13 @@ export const addUser = (req, res) => {
       res.send(err);
     });
 };
+
+//Create new User
+export const loginUser = (req, res) => {
+  jwt.sign({ user: req.body }, "secretKey", (err, token) => {
+    console.log(token);
+    res.json({ token });
+  });
+};
+
+
