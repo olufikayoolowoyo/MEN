@@ -2,12 +2,11 @@ const mongoose = require("mongoose");
 
 import { verify } from "jsonwebtoken";
 import {
-  addUser,
   getUsers,
-  findUserById,
-  removeUser,
-  updateUser,loginUser
+  findUserById,loginUser
 } from "../controllers/menController";
+
+import securedRoutes from './secureRoute'
 
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://127.0.0.1/MenDb");
@@ -23,12 +22,16 @@ const routes = (app) => {
   app.use(bodyParser.json());
 
   /****ROUTES****/
-  app.use(verifyToken).route("/user").get(getUsers).post(addUser);
+
+  app.use('/secured', verifyToken, securedRoutes)
+
   app.route("/login").post(loginUser);
-  app.route("/user/:id").get(findUserById).put(updateUser).delete(removeUser);
+  app.route("/user/:id").get(findUserById);
+  app.route("/user").get(getUsers);
 };
+
 function verifyToken(req, res, next){
-  
+
   const bearerHeader = req.headers["authorization"];
   if (typeof bearerHeader !== "undefined") {
     const bearerToken = bearerHeader.split(" ")[1];
